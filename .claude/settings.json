@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/check-sensitive.sh",
+            "if": "Bash(git commit*)",
+            "timeout": 10,
+            "statusMessage": ".claude/ 민감 파일 검사 중..."
+          }
+        ]
+      }
+    ]
+  }
+}

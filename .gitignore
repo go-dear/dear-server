@@ -56,5 +56,12 @@ Thumbs.db
 
 ### Local agent state ###
 .omc/
-.claude/
+
+# .claude/ is shared (committed) — only personal overrides are gitignored
+.claude/settings.local.json
+.claude/sessions/
+.claude/cache/
+
+### Local Claude instructions ###
+CLAUDE.local.md
 
