@@ -1,12 +1,14 @@
 package com.dear.user.domain
 
+import com.dear.common.persistence.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.Instant
 
 @Entity
 @Table(name = "users")
@@ -17,16 +19,27 @@ class User(
     @Column(nullable = false, length = 30)
     var nickname: String,
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    var role: UserRole,
+
+    requester: Long,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    var id: Long?,
+) : BaseEntity(createdBy = requester, updatedBy = requester) {
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    var createdAt: Instant = Instant.now(),
+    fun rename(newNickname: String, requester: Long) {
+        this.nickname = newNickname
+        auditUpdatedBy(requester)
+    }
 
-    @Column(name = "updated_at", nullable = false)
-    var updatedAt: Instant = Instant.now(),
-) {
+    fun changeRole(newRole: UserRole, requester: Long) {
+        this.role = newRole
+        auditUpdatedBy(requester)
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is User) return false
@@ -34,4 +47,24 @@ class User(
     }
 
     override fun hashCode(): Int = id?.hashCode() ?: 0
+
+    companion object {
+        /**
+         * Preferred way to instantiate a new User from domain code.
+         * Calling the constructor directly is allowed but flagged in PR review;
+         * test fixtures (UserFixture) are the only sanctioned exception.
+         */
+        fun create(
+            email: String,
+            nickname: String,
+            role: UserRole,
+            requester: Long,
+        ): User = User(
+            email = email,
+            nickname = nickname,
+            role = role,
+            requester = requester,
+            id = null,
+        )
+    }
 }

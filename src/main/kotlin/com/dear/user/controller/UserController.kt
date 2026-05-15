@@ -1,5 +1,6 @@
 package com.dear.user.controller
 
+import com.dear.common.web.CurrentUserId
 import com.dear.user.dto.RegisterUserRequest
 import com.dear.user.dto.UserResponse
 import com.dear.user.service.UserService
@@ -14,19 +15,25 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users/v1")
 class UserController(
     private val userService: UserService,
 ) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun register(@Valid @RequestBody request: RegisterUserRequest): UserResponse {
-        val user = userService.register(request.email, request.nickname)
-        return UserResponse.from(user)
-    }
+    fun register(
+        @Valid @RequestBody request: RegisterUserRequest,
+        currentUserId: CurrentUserId,
+    ): UserResponse = UserResponse.from(
+        userService.register(
+            email = request.email,
+            nickname = request.nickname,
+            requester = currentUserId.userId,
+        ),
+    )
 
     @GetMapping("/{id}")
-    suspend fun get(@PathVariable id: Long): UserResponse =
+    fun get(@PathVariable id: Long): UserResponse =
         UserResponse.from(userService.findById(id))
 }

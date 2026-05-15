@@ -60,6 +60,9 @@ dependencies {
     // Observability
     implementation(libs.micrometer.registry.prometheus)
 
+    // Cache
+    implementation(libs.caffeine)
+
     // Test
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.security.test)

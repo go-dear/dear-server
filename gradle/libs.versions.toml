@@ -42,6 +42,9 @@ resilience4j-kotlin = { module = "io.github.resilience4j:resilience4j-kotlin", v
 # Observability (Boot BOM이 버전 관리)
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus" }
 
+# Cache (Boot BOM이 버전 관리)
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine" }
+
 # JUnit
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
