@@ -1,6 +1,11 @@
 package com.dear.user.service
 
+import com.dear.common.exception.BadRequestException
+import com.dear.common.exception.NotFoundException
+import com.dear.common.exception.UserErrorType
 import com.dear.user.domain.User
+import com.dear.user.domain.UserRole
+import com.dear.user.model.UserModel
 import com.dear.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,19 +17,26 @@ class UserService(
 ) {
 
     @Transactional
-    fun register(email: String, nickname: String): User {
+    fun register(email: String, nickname: String, requester: Long): UserModel {
         if (users.existsByEmail(email)) {
-            throw DuplicateEmailException(email)
+            throw BadRequestException(UserErrorType.DUPLICATE_EMAIL, detail = "email=$email")
         }
-        return users.save(User(email = email, nickname = nickname))
+        val saved = users.save(
+            User.create(
+                email = email,
+                nickname = nickname,
+                role = UserRole.USER,
+                requester = requester,
+            ),
+        )
+        return UserModel.from(saved)
     }
 
-    fun findById(id: Long): User =
-        users.findById(id).orElseThrow { UserNotFoundException(id) }
+    fun findById(id: Long): UserModel =
+        UserModel.from(
+            users.findById(id).orElseThrow { NotFoundException(detail = "User not found: id=$id") },
+        )
 
-    fun findByEmail(email: String): User? = users.findByEmail(email)
+    fun findByEmailOrNull(email: String): UserModel? =
+        users.findByEmail(email)?.let(UserModel::from)
 }
-
-class UserNotFoundException(id: Long) : RuntimeException("User not found: id=$id")
-
-class DuplicateEmailException(email: String) : RuntimeException("Email already exists: $email")

@@ -9,6 +9,10 @@
 정책은 사용자가 명시적으로 지정한 항목만 추가된다.
 
 - [DB 네이밍](./.claude/docs/policy/db-naming.md) — UNIQUE/INDEX 키 명명 규칙
+- [감사 컬럼](./.claude/docs/policy/audit-columns.md) — 모든 테이블 필수 `created_at` / `created_by` / `updated_at` / `updated_by`
+- [도메인 계층](./.claude/docs/policy/domain-layering.md) — Entity/Service/Model/Response 분리, 팩토리 패턴, suspend 미사용
+- [API 경로](./.claude/docs/policy/api-paths.md) — `/admin/{domain}/v{N}/**` / `/api/{domain}/v{N}/**` 패턴, 인증 흐름
+- [테스트](./.claude/docs/policy/testing.md) — JUnit5 + AssertJ + 손으로 작성한 Fake, MockK/Kotest 미사용
 
 ## 로컬 오버라이드
 
