@@ -27,6 +27,7 @@ class User(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     var id: Long?,
 ) : BaseEntity(createdBy = requester, updatedBy = requester) {
 
