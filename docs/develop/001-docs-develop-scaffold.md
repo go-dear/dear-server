@@ -4,7 +4,7 @@ title: docs/develop 스캐폴드 + atomic PR / changelog-discipline 정책
 date: 2026-05-15
 related_pr: 8
 related_issue: 7
-status: proposed
+status: implemented
 ---
 
 ## 결정
