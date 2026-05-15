@@ -13,6 +13,13 @@
 - [도메인 계층](./.claude/docs/policy/domain-layering.md) — Entity/Service/Model/Response 분리, 팩토리 패턴, suspend 미사용
 - [API 경로](./.claude/docs/policy/api-paths.md) — `/admin/{domain}/v{N}/**` / `/api/{domain}/v{N}/**` 패턴, 인증 흐름
 - [테스트](./.claude/docs/policy/testing.md) — JUnit5 + AssertJ + 손으로 작성한 Fake, MockK/Kotest 미사용
+- [최소 단위 PR](./.claude/docs/policy/atomic-pr.md) — PR은 하나의 논리적 단위만 포함
+- [변경 이력 (`docs/develop/`)](./.claude/docs/policy/changelog-discipline.md) — 정책/스키마/아키텍처 결정마다 entry 추가
+
+## 변경 이력
+
+새 작업 시 [`docs/develop/`](./docs/develop/README.md) 인덱스를 훑어 과거 결정과 충돌이 없는지 확인한다.
+정책 변경 / 스키마 마이그레이션 / 아키텍처 결정을 동반하는 PR은 entry를 함께 작성한다.
 
 ## 로컬 오버라이드
 
