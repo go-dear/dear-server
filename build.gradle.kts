@@ -56,6 +56,7 @@ dependencies {
     runtimeOnly(libs.mysql.connector.j)
     implementation(libs.flyway.core)
     implementation(libs.flyway.mysql)
+    implementation(libs.hibernate.envers)
 
     // Observability
     implementation(libs.micrometer.registry.prometheus)

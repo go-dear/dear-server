@@ -9,9 +9,11 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.envers.Audited
 
 @Entity
 @Table(name = "users")
+@Audited
 class User(
     @Column(nullable = false, unique = true, length = 255)
     var email: String,
