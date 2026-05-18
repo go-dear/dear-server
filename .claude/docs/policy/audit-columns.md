@@ -93,3 +93,62 @@ abstract class BaseEntity(
 - [ ] FK 제약 **없음** (어떤 연관 컬럼도)
 - [ ] 엔티티 클래스가 `BaseEntity`를 상속
 - [ ] UNIQUE/INDEX는 [DB 네이밍 정책](./db-naming.md) 준수 (`ux_<table>_NN`, `ix_<table>_NN`)
+- [ ] **Envers audit 테이블** `{table}_history` 함께 생성 (아래 섹션 참조)
+
+## 변경 이력 (Hibernate Envers)
+
+원장 테이블에서는 **hard delete**가 기본이지만, 모든 변경(insert / update / delete)은
+Hibernate Envers가 자동으로 `{table}_history` 테이블에 보존한다.
+
+### 적용 범위
+
+- `BaseEntity`에 `@Audited`를 두어 audit 컬럼(`created_at`/`created_by`/`updated_at`/`updated_by`)이 history 테이블에 포함되도록 한다.
+- **`@Audited`는 각 도메인 entity 클래스에도 직접 명시해야 한다** — `@MappedSuperclass`의 `@Audited`만으로는 자식 entity가 audit 대상이 되지 않는다 (Hibernate Envers 동작).
+- 새 entity 추가 시 체크리스트: `@Audited` 어노테이션 + `{table}_history` 마이그레이션 동반 작성.
+
+### 명명 컨벤션 (override)
+
+Envers 기본은 `UPPERCASE` 컬럼/테이블이지만, 본 프로젝트는 `application.yml`에서 lowercase로 override한다:
+
+```yaml
+spring:
+  jpa:
+    properties:
+      hibernate:
+        envers:
+          audit_table_suffix: _history
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+```
+
+결과 명명:
+- 전역 revision 테이블: `revinfo` (`rev INTEGER AUTO_INCREMENT`, `revtstmp BIGINT`)
+- 엔티티별 audit: `{table}_history` (예: `users_history`)
+- audit row 메타 컬럼: `rev` (어느 revision), `revtype` (`0`=ADD, `1`=MOD, `2`=DEL)
+
+### audit 테이블 DDL 패턴
+
+```sql
+CREATE TABLE <table>_history (
+    <pk>       BIGINT       NOT NULL,
+    rev        INTEGER      NOT NULL,
+    revtype    TINYINT      NULL,
+    -- 원장 컬럼 전부 NULL 허용 (DELETE rev는 값 보존 안 함)
+    <col1>     ...          NULL,
+    created_at TIMESTAMP(6) NULL,
+    created_by BIGINT       NULL,
+    updated_at TIMESTAMP(6) NULL,
+    updated_by BIGINT       NULL,
+    PRIMARY KEY (<pk>, rev),
+    INDEX ix_<table>_history_01 (rev)
+) ENGINE = InnoDB ...;
+```
+
+- 모든 원장 컬럼은 audit 테이블에서는 `NULL` 허용 (Envers 동작 가정).
+- FK 제약 없음 (전역 정책).
+- 복합 PK: `(원장 PK, rev)`.
+
+### 변경 이력 조회
+
+`AuditReader`로 시점/revision별 조회 가능 (필요 시점에 예시 코드 추가).

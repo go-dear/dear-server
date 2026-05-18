@@ -35,6 +35,9 @@ mysql-connector-j = { module = "com.mysql:mysql-connector-j" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
 flyway-mysql = { module = "org.flywaydb:flyway-mysql" }
 
+# Audit history (Boot BOM이 Hibernate 버전 관리 → envers 버전 일치)
+hibernate-envers = { module = "org.hibernate.orm:hibernate-envers" }
+
 # Resilience4j (BOM 밖, 직접 버전)
 resilience4j-spring-boot3 = { module = "io.github.resilience4j:resilience4j-spring-boot3", version.ref = "resilience4j" }
 resilience4j-kotlin = { module = "io.github.resilience4j:resilience4j-kotlin", version.ref = "resilience4j" }

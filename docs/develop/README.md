@@ -10,4 +10,5 @@
 | Seq | Title | PR | Status | Date |
 |---|---|---|---|---|
 | [001](./001-docs-develop-scaffold.md) | docs/develop 스캐폴드 + atomic PR / changelog-discipline 정책 | #8 | implemented | 2026-05-15 |
-| [002](./002-id-column-rename.md) | ID 컬럼명을 `{table}_id` 패턴으로 통일 + users.id → user_id rename | #10 | proposed | 2026-05-15 |
+| [002](./002-id-column-rename.md) | ID 컬럼명을 `{table}_id` 패턴으로 통일 + users.id → user_id rename | #10 | implemented | 2026-05-15 |
+| [003](./003-envers-integration.md) | Hibernate Envers 도입 — 모든 엔티티 변경 이력 자동 보존 | #12 | proposed | 2026-05-15 |
